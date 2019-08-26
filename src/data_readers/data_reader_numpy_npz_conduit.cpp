@@ -144,11 +144,14 @@ void numpy_npz_conduit_reader::preload_data_store() {
     }
 
     conduit::Node node;
+    //double t1 = get_time();
     numpy_conduit_converter::load_conduit_node(m_filenames[data_id], data_id, node);
     const char *char_ptr = node[LBANN_DATA_ID_STR(data_id) + "/frm/data"].value();
     const int* label_ptr = reinterpret_cast<const int*>(char_ptr);
     label_classes.insert(*label_ptr);
     m_data_store->set_conduit_node(data_id, node);
+    //double t2 = get_time();
+    //std::cout << rank << " loading: " << m_filenames[data_id] << " " << t2 - t1 << std::endl;
   }
 
   if (m_has_labels) {
@@ -200,9 +203,10 @@ void numpy_npz_conduit_reader::preload_data_store() {
     #endif
   }
   double tm2 = get_time();
-  if (is_master()) {
-    std::cout << "time to preload: " << tm2 - tm1 << " for role: " << get_role() << "\n";
-  }
+  //if (is_master()) {
+  //  std::cout << "time to preload: " << tm2 - tm1 << " for role: " << get_role() << "\n";
+  //}
+  std::cout << rank << " time to preload: " << tm2 - tm1 << " for role: " << get_role() << "\n";
 }
 
 bool numpy_npz_conduit_reader::fetch_datum(Mat& X, int data_id, int mb_idx) {

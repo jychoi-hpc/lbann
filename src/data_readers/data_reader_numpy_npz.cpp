@@ -81,6 +81,7 @@ namespace lbann {
     }
     ifs.close();
 
+    std::cout << "Load: " << infile << std::endl;
     const cnpy::npz_t npz = cnpy::npz_load(infile);
 
     std::vector<std::tuple<const bool, const std::string, cnpy::NpyArray &> > npyLoadList;
